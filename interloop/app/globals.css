@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Display font (Cabinet Grotesk) */
+  --font-display: var(--font-display);
+
+  /* Coral accent palette */
+  --color-coral-50: #fff4f0;
+  --color-coral-100: #ffe4d9;
+  --color-coral-200: #ffc5b0;
+  --color-coral-300: #ff9e7e;
+  --color-coral-400: #ff7349;
+  --color-coral-500: #f95d2e;
+  --color-coral-600: #e04018;
+  --color-coral-700: #bb3212;
+  --color-coral-800: #982b14;
+  --color-coral-900: #7d2814;
+
+  /* Stone is already in Tailwind — using it as primary text/bg */
+}
+
+/* Light background only — no dark mode for MVP */
+:root {
+  color-scheme: light;
+}
+
+body {
+  background-color: #fafaf9; /* stone-50 warm white */
+  color: #1c1917;            /* stone-900 */
+  font-family: system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Smooth scroll globally */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Font utility */
+.font-display {
+  font-family: var(--font-display), system-ui, sans-serif;
+}
