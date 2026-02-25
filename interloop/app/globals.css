@@ -25,3 +25,14 @@ html {
   font-family: var(--font-display), system-ui, sans-serif;
 }
 
+.prose-content ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  space-y: 0.5rem;
+}
+
+.prose-content li {
+  margin-bottom: 0.4rem;
+  line-height: 1.7;
+}
+
