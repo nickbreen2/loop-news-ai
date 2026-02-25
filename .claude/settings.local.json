@@ -6,7 +6,17 @@
       "Bash(npx tsc:*)",
       "Bash(npm run build:*)",
       "Bash(node -e:*)",
-      "Bash(ngrok version:*)"
+      "Bash(ngrok version:*)",
+      "Bash(npx next build)",
+      "Bash(curl:*)",
+      "Bash(LOGOS_DIR=\"/Users/nicolasbreen/Documents/Loop News - AI/interloop/public/logos\")",
+      "Bash(BASE=\"https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons\")",
+      "Bash(__NEW_LINE_3556ababce30c4ca__ for icon in anthropic reddit huggingface techcrunch ycombinator perplexity vercel deepmind arstechnica nvidia producthunt substack)",
+      "Bash(do)",
+      "Bash(done)"
+    ],
+    "additionalDirectories": [
+      "/Users/nicolasbreen/Documents/Loop News - AI/interloop/public"
     ]
   }
 }

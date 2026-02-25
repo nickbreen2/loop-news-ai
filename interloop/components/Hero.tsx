@@ -1,15 +1,75 @@
 'use client'
 
-const SMS_LINK = process.env.NEXT_PUBLIC_SMS_LINK ?? 'sms:+18884317940&body=START'
-const DISPLAY_NUMBER = process.env.NEXT_PUBLIC_TWILIO_DISPLAY_NUMBER ?? '(888) 431-7940'
+import { useState } from 'react'
+import FloatingLogos from './FloatingLogos'
+
 
 export default function Hero() {
-  const scrollToForm = () => {
-    document.getElementById('get-started')?.scrollIntoView({ behavior: 'smooth' })
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setStatus('loading')
+    setErrorMsg('')
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        setErrorMsg(data.error ?? 'Something went wrong.')
+        setStatus('error')
+        return
+      }
+      setStatus('success')
+    } catch {
+      setErrorMsg('Network error. Please try again.')
+      setStatus('error')
+    }
   }
 
   return (
-    <section className="relative flex flex-col items-center justify-center min-h-[85vh] px-6 pt-24 pb-16 text-center overflow-hidden">
+    <section className="relative flex flex-col items-center justify-start sm:justify-center flex-1 px-6 pt-32 pb-10 sm:pt-28 sm:pb-16 text-center overflow-hidden">
+      <FloatingLogos />
+
+      {/* Top fade — keeps the navbar area clean */}
+      <div
+        className="absolute inset-x-0 top-0 pointer-events-none"
+        style={{
+          height: '18%',
+          background: 'linear-gradient(to bottom, #0A1628 0%, transparent 100%)',
+          zIndex: 5,
+        }}
+      />
+
+      {/* Centre safe-zone — mobile only: dims logos behind the main content so text stays legible */}
+      <div
+        className="md:hidden absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 90% 75% at 50% 44%, rgba(10,22,40,0.97) 40%, rgba(10,22,40,0.6) 65%, transparent 100%)',
+          zIndex: 2,
+        }}
+      />
+
+      {/* Centre grid — visible in the middle, fades to edges */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)
+          `,
+          backgroundSize: '48px 48px',
+          WebkitMaskImage: 'radial-gradient(ellipse 70% 65% at 50% 48%, black 20%, transparent 75%)',
+          maskImage: 'radial-gradient(ellipse 70% 65% at 50% 48%, black 20%, transparent 75%)',
+          zIndex: 3,
+        }}
+      />
+
       {/* Subtle background grain */}
       <div
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -20,104 +80,95 @@ export default function Hero() {
         }}
       />
 
-      {/* Signal orb illustration */}
-      <div className="relative mb-10">
-        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-coral-400 to-coral-600 flex items-center justify-center shadow-lg shadow-coral-200">
-          {/* Waveform icon */}
-          <svg width="44" height="28" viewBox="0 0 44 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0" y="10" width="4" height="8" rx="2" fill="white" opacity="0.7" />
-            <rect x="8" y="4" width="4" height="20" rx="2" fill="white" opacity="0.85" />
-            <rect x="16" y="0" width="4" height="28" rx="2" fill="white" />
-            <rect x="24" y="4" width="4" height="20" rx="2" fill="white" opacity="0.85" />
-            <rect x="32" y="8" width="4" height="12" rx="2" fill="white" opacity="0.7" />
-            <rect x="40" y="12" width="4" height="4" rx="2" fill="white" opacity="0.5" />
-          </svg>
-        </div>
-        {/* Pulse rings */}
-        <div className="absolute inset-0 rounded-full border-2 border-coral-300 animate-ping opacity-20" />
-        <div className="absolute -inset-3 rounded-full border border-coral-200 animate-pulse opacity-30" />
-      </div>
-
       {/* Headline */}
-      <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-stone-900 leading-[1.05] mb-5">
+      <h1 className="relative z-10 font-display text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.05] mb-5">
         Stay In The Loop.
         <br />
-        <span className="text-coral-500">Every Morning.</span>
+        <span
+          style={{
+            background: 'linear-gradient(135deg, #ffffff 0%, #c8d8e8 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
+        >
+          Every Morning.
+        </span>
       </h1>
 
       {/* Subheadline */}
-      <p className="max-w-xl text-lg sm:text-xl text-stone-500 leading-relaxed mb-10">
-        Your AI assistant texts you personalized tech news every morning — tools,
-        breakthroughs, and opportunities tailored to what you actually care about.
+      <p
+        className="relative z-10 max-w-xl text-sm sm:text-xl leading-relaxed mb-6"
+        style={{ color: '#A8B8CC' }}
+      >
+        The most important Tech &amp; AI stories, curated and delivered to your inbox every morning. Stay in the loop — never miss a breakthrough, a tool, or a trend that matters.
       </p>
 
-      {/* CTAs */}
-      <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm sm:max-w-none sm:justify-center">
-        <a
-          href={SMS_LINK}
-          className="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-coral-500 text-white font-semibold text-base shadow-md shadow-coral-200 hover:bg-coral-600 active:scale-[0.97] transition-all duration-150"
-        >
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M16 0H2C.9 0 0 .9 0 2v16l4-4h12c1.1 0 2-.9 2-2V2c0-1.1-.9-2-2-2zm0 12H4l-2 2V2h14v10z"
-              fill="currentColor"
-            />
-          </svg>
-          Text Interloop
-        </a>
+      {/* Email signup */}
+      <div className="relative z-10 w-full max-w-md">
+        {status === 'success' ? (
+          <p className="text-white font-medium">You&apos;re on the list! We&apos;ll be in touch.</p>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+            {/* Desktop: button inside the pill */}
+            <div
+              className="hidden sm:flex items-center gap-2 pl-5 pr-1.5 py-1.5 rounded-full"
+              style={{
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                backdropFilter: 'blur(8px)',
+              }}
+            >
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="flex-1 bg-transparent text-base text-white placeholder:text-white/40 focus:outline-none py-2"
+              />
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="px-5 py-2.5 rounded-full font-semibold text-base whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.97] transition-all duration-150"
+                style={{ background: '#ffffff', color: '#0A1628' }}
+              >
+                {status === 'loading' ? 'Joining…' : 'Join the Loop →'}
+              </button>
+            </div>
 
-        <button
-          onClick={scrollToForm}
-          className="inline-flex items-center justify-center px-7 py-4 rounded-2xl border-2 border-stone-900 text-stone-900 font-semibold text-base hover:bg-stone-900 hover:text-white active:scale-[0.97] transition-all duration-150"
-        >
-          Get Started
-        </button>
-      </div>
-
-      {/* Display number hint */}
-      <p className="mt-6 text-sm text-stone-400">
-        Or text <span className="font-medium text-stone-500">START</span> to{' '}
-        <span className="font-medium text-stone-500">{DISPLAY_NUMBER}</span>
-      </p>
-
-      {/* Sample iMessage mockup */}
-      <div className="mt-14 w-full max-w-sm mx-auto">
-        <div className="bg-white rounded-3xl shadow-xl shadow-stone-200/60 border border-stone-100 overflow-hidden">
-          {/* iMessage header */}
-          <div className="bg-stone-50 border-b border-stone-100 px-5 py-3 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-coral-100 flex items-center justify-center text-coral-600 font-bold text-xs">
-              IL
+            {/* Mobile: stacked layout */}
+            <div className="flex flex-col gap-3 sm:hidden">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="px-5 py-3.5 text-base text-white placeholder:text-white/40 focus:outline-none rounded-full"
+                style={{
+                  background: 'rgba(255,255,255,0.08)',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  backdropFilter: 'blur(8px)',
+                }}
+              />
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="px-6 py-3.5 rounded-full font-semibold text-base whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.97] transition-all duration-150"
+                style={{ background: '#ffffff', color: '#0A1628' }}
+              >
+                {status === 'loading' ? 'Joining…' : 'Join the Loop →'}
+              </button>
             </div>
-            <div className="text-left">
-              <p className="text-sm font-semibold text-stone-800">Interloop</p>
-              <p className="text-xs text-stone-400">{DISPLAY_NUMBER}</p>
-            </div>
-          </div>
-
-          {/* Sample messages */}
-          <div className="px-4 py-4 space-y-3 text-left">
-            <div className="flex justify-start">
-              <div className="bg-stone-100 text-stone-700 text-sm rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[85%] leading-snug">
-                Good morning, Alex! Here's your Tuesday briefing.
-              </div>
-            </div>
-            <div className="flex justify-start">
-              <div className="bg-stone-100 text-stone-700 text-sm rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[85%] leading-snug">
-                <span className="font-semibold">1.</span> Mistral released a new open-source coding model that beats GPT-4o on benchmarks — worth a look for your stack.
-              </div>
-            </div>
-            <div className="flex justify-start">
-              <div className="bg-stone-100 text-stone-700 text-sm rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[85%] leading-snug">
-                <span className="font-semibold">2.</span> YC batch applications open tomorrow. Deadline Feb 28.
-              </div>
-            </div>
-            <div className="flex justify-end">
-              <div className="bg-coral-500 text-white text-sm rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[85%] leading-snug">
-                Tell me more about the Mistral model
-              </div>
-            </div>
-          </div>
-        </div>
+            {status === 'error' && (
+              <p className="text-red-400 text-sm">{errorMsg}</p>
+            )}
+            <p className="text-sm" style={{ color: '#A8B8CC' }}>
+              No spam. Unsubscribe anytime.
+            </p>
+          </form>
+        )}
       </div>
     </section>
   )

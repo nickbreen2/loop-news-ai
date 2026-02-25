@@ -26,8 +26,8 @@ const steps = [
           d="M14 2C7.373 2 2 7.373 2 14s5.373 12 12 12 12-5.373 12-12S20.627 2 14 2zm0 22C8.477 24 4 19.523 4 14S8.477 4 14 4s10 4.477 10 10-4.477 10-10 10zm-1-5h2v-6h-2v6zm0-8h2V9h-2v2z"
           fill="currentColor"
         />
-        <circle cx="21" cy="7" r="5" fill="#F97316" />
-        <path d="M21 5v2.5l1.5 1.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+        <circle cx="21" cy="7" r="5" fill="rgba(255,255,255,0.5)" />
+        <path d="M21 5v2.5l1.5 1.5" stroke="rgba(10,22,40,0.9)" strokeWidth="1.5" strokeLinecap="round" />
       </svg>
     ),
     title: 'Wake up to your briefing',
@@ -61,13 +61,16 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="px-6 py-20 bg-stone-50">
+    <section id="how-it-works" className="px-6 py-12 sm:py-20">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-14">
-          <p className="text-sm font-semibold tracking-widest uppercase text-coral-500 mb-3">
+          <p
+            className="text-sm font-semibold tracking-widest uppercase mb-3"
+            style={{ color: '#A8B8CC' }}
+          >
             How It Works
           </p>
-          <h2 className="font-display text-4xl sm:text-5xl font-bold text-stone-900 tracking-tight">
+          <h2 className="font-display text-4xl sm:text-5xl font-bold text-white tracking-tight">
             Three steps to smarter mornings
           </h2>
         </div>
@@ -76,22 +79,34 @@ export default function HowItWorks() {
           {steps.map((step) => (
             <div
               key={step.number}
-              className="relative bg-white rounded-3xl p-8 border border-stone-100 shadow-sm hover:shadow-md transition-shadow duration-200"
+              className="relative rounded-3xl p-8 transition-shadow duration-200"
+              style={{
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.08)',
+              }}
             >
               {/* Step number */}
-              <span className="absolute top-6 right-7 font-display text-5xl font-bold text-stone-100 select-none">
+              <span
+                className="absolute top-6 right-7 font-display text-5xl font-bold select-none"
+                style={{ color: 'rgba(255,255,255,0.06)' }}
+              >
                 {step.number}
               </span>
 
               {/* Icon */}
-              <div className="w-12 h-12 rounded-2xl bg-coral-50 text-coral-500 flex items-center justify-center mb-5">
+              <div
+                className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5 text-white"
+                style={{ background: 'rgba(255,255,255,0.08)' }}
+              >
                 {step.icon}
               </div>
 
-              <h3 className="font-display text-xl font-semibold text-stone-900 mb-3 leading-snug">
+              <h3 className="font-display text-xl font-semibold text-white mb-3 leading-snug">
                 {step.title}
               </h3>
-              <p className="text-stone-500 text-base leading-relaxed">{step.description}</p>
+              <p className="text-base leading-relaxed" style={{ color: '#A8B8CC' }}>
+                {step.description}
+              </p>
             </div>
           ))}
         </div>
